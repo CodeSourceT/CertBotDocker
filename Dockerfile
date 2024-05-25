@@ -1,6 +1,8 @@
 FROM amd64/python:3.8-alpine3.12
 
 ENV CERTBOT_VERSION=2.6.0
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 80 443
 VOLUME /etc/letsencrypt /var/lib/letsencrypt
@@ -45,7 +47,7 @@ RUN apk add --no-cache --virtual .build-deps \
     && apk del .build-deps \
     && rm -rf ${HOME}/.cargo
 
-COPY ./run_cert.sh /run_cert.sh
+COPY ./run_cert.py /run_cert.py
 COPY ./cert.sh /cert.sh
 
-CMD [ "/bin/sh","/run_cert.sh" ]
+ENTRYPOINT [ "python", "-u", "/run_cert.py" ]

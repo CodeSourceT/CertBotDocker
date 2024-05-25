@@ -1,4 +1,8 @@
 #/bin/sh
 
-certbot certonly --standalone -n --email=tb@mi4.fr --agree-tos --domains=test.sso.mi4.fr
-cat /etc/letsencrypt/live/test.sso.mi4.fr-0001/privkey.pem /etc/letsencrypt/live/test.sso.mi4.fr-0001/fullchain.pem | tee /etc/letsencrypt/live/test.sso.mi4.fr-0001/haproxy.pem
+certbot certonly --standalone -n --email=$1 --agree-tos --domains=$2
+for dir in /etc/letsencrypt/live/*/
+do
+    dir=${dir%*/}
+    cat $dir/privkey.pem $dir/fullchain.pem | tee $dir/haproxy.pem
+done
